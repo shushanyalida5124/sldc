@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import transform from '../transform';
+import { transform } from '../transform';
 import { defineSLD } from '../../index';
 
 describe('transform', () => {
