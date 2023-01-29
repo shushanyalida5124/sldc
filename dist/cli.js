@@ -1,3 +1,7 @@
+import {
+  __dirname
+} from "./chunk-ETYLGWCF.js";
+
 // src/node/cli.ts
 import cac from "cac";
 
@@ -6,6 +10,14 @@ import { js2xml } from "xml-js";
 import fastGlob from "fast-glob";
 import fse from "fs-extra";
 import { pathToFileURL } from "url";
+
+// src/node/constants/index.ts
+import { join } from "path";
+import { normalizePath } from "vite";
+var ROOTPATH = normalizePath(join(__dirname, ".."));
+var FILE_SUFFIX_REG = /(\.[jt]s$)/;
+
+// src/node/transform.ts
 function transform(js) {
   const xml = js2xml(
     {
@@ -47,12 +59,12 @@ function transformFiles(root) {
   });
 }
 async function transformFile(file) {
-  const newFileName = file.replace(/(\.([jt])s$)/, `${Math.random()}.js`);
+  const newFileName = file.replace(FILE_SUFFIX_REG, `${Math.random()}.js`);
   await fse.copyFile(pathToFileURL(file), pathToFileURL(newFileName));
   const { default: config } = await import(pathToFileURL(newFileName));
   fse.rmSync(newFileName);
   const sld = transform(config);
-  const sldFileName = file.replace(/\.[jt]s$/, ".sld");
+  const sldFileName = file.replace(FILE_SUFFIX_REG, ".sld");
   fse.writeFile(sldFileName, sld).then(() => {
     console.log(sldFileName, "complied");
   });
@@ -73,7 +85,7 @@ async function createDevServer(root = process.cwd()) {
           transformFiles(root);
         },
         async handleHotUpdate({ file }) {
-          if (/\.[tj]s$/.test(file)) {
+          if (FILE_SUFFIX_REG.test(file)) {
             transformFile(file);
           }
         }
@@ -85,8 +97,12 @@ async function createDevServer(root = process.cwd()) {
 // src/node/cli.ts
 var cli = cac("sldc").version("0.0.1").help();
 cli.command("[root]", "sldc start").option("-w, --watch", "watching changes").action(async (root, { watch }) => {
+  root = root ? resolve(root) : process.cwd();
+  if (FILE_SUFFIX_REG.test(root)) {
+    transformFile(root);
+    return;
+  }
   if (watch) {
-    root = root ? resolve(root) : process.cwd();
     await createDevServer(root);
     console.log("sldc start");
   } else {

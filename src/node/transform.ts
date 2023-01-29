@@ -3,6 +3,7 @@ import { Config } from '..';
 import fastGlob from 'fast-glob';
 import fse from 'fs-extra';
 import { pathToFileURL } from 'url';
+import { FILE_SUFFIX_REG } from './constants';
 
 export function transform(js: Config) {
   const xml = js2xml(
@@ -47,14 +48,14 @@ export function transformFiles(root: string) {
   });
 }
 export async function transformFile(file) {
-  const newFileName = file.replace(/(\.([jt])s$)/, `${Math.random()}.js`);
+  const newFileName = file.replace(FILE_SUFFIX_REG, `${Math.random()}.js`);
   await fse.copyFile(pathToFileURL(file), pathToFileURL(newFileName));
   const { default: config } = await import(
     pathToFileURL(newFileName) as unknown as string
   );
   fse.rmSync(newFileName);
   const sld = transform(config);
-  const sldFileName = file.replace(/\.[jt]s$/, '.sld');
+  const sldFileName = file.replace(FILE_SUFFIX_REG, '.sld');
   fse.writeFile(sldFileName, sld).then(() => {
     console.log(sldFileName, 'complied');
   });
