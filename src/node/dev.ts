@@ -10,7 +10,7 @@ export async function createDevServer(root = process.cwd()) {
           transformFiles(root);
         },
         async handleHotUpdate({ file }) {
-          if (/\.[tj]s/.test(file)) {
+          if (/\.[tj]s$/.test(file)) {
             transformFile(file);
           }
         }

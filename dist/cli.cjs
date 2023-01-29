@@ -37,7 +37,7 @@ function transform(js) {
   return xml;
 }
 function transformFiles(root) {
-  const files = _fastglob2.default.sync(["*.js"], {
+  const files = _fastglob2.default.sync(["*.js", "*.ts"], {
     cwd: root,
     absolute: true,
     ignore: ["**/node_modules/**", "**/build/**", "config.ts"]
@@ -47,7 +47,7 @@ function transformFiles(root) {
   });
 }
 async function transformFile(file) {
-  const newFileName = file.replace(/(\.([jt])s$)/, `${Math.random()}$1`);
+  const newFileName = file.replace(/(\.([jt])s$)/, `${Math.random()}.js`);
   await _fsextra2.default.copyFile(_url.pathToFileURL.call(void 0, file), _url.pathToFileURL.call(void 0, newFileName));
   const { default: config } = await Promise.resolve().then(() => require(_url.pathToFileURL.call(void 0, newFileName)));
   _fsextra2.default.rmSync(newFileName);
@@ -73,7 +73,7 @@ async function createDevServer(root = process.cwd()) {
           transformFiles(root);
         },
         async handleHotUpdate({ file }) {
-          if (/\.[tj]s/.test(file)) {
+          if (/\.[tj]s$/.test(file)) {
             transformFile(file);
           }
         }

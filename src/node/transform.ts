@@ -36,7 +36,7 @@ export function transform(js: Config) {
 }
 export function transformFiles(root: string) {
   const files = fastGlob
-    .sync(['*.js'], {
+    .sync(['*.js', '*.ts'], {
       cwd: root,
       absolute: true,
       ignore: ['**/node_modules/**', '**/build/**', 'config.ts']
@@ -47,7 +47,7 @@ export function transformFiles(root: string) {
   });
 }
 export async function transformFile(file) {
-  const newFileName = file.replace(/(\.([jt])s$)/, `${Math.random()}$1`);
+  const newFileName = file.replace(/(\.([jt])s$)/, `${Math.random()}.js`);
   await fse.copyFile(pathToFileURL(file), pathToFileURL(newFileName));
   const { default: config } = await import(
     pathToFileURL(newFileName) as unknown as string
