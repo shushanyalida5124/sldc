@@ -2,7 +2,7 @@
 var _cac = require('cac'); var _cac2 = _interopRequireDefault(_cac);
 
 // src/node/transform.ts
-var _xmljs = require('xml-js');
+var _xml = require('xml'); var _xml2 = _interopRequireDefault(_xml);
 var _fastglob = require('fast-glob'); var _fastglob2 = _interopRequireDefault(_fastglob);
 var _fsextra = require('fs-extra'); var _fsextra2 = _interopRequireDefault(_fsextra);
 var _url = require('url');
@@ -14,32 +14,28 @@ var ROOTPATH = _vite.normalizePath.call(void 0, _path.join.call(void 0, __dirnam
 var FILE_SUFFIX_REG = /(\.[jt]s$)/;
 
 // src/node/transform.ts
-function transform(js) {
-  const xml = _xmljs.js2xml.call(void 0, 
+function transform(config) {
+  const xml = _xml2.default.call(void 0, 
     {
-      declaration: {
-        attributes: {
-          version: "1.0",
-          encoding: "utf-8"
-        }
-      },
-      elements: [
+      "sld:StyledLayerDescriptor": [
         {
-          type: "element",
-          name: "sld:StyledLayerDescriptor",
-          attributes: {
+          _attr: {
+            version: "1.0.0",
+            "xsi:schemaLocation": "http://www.opengis.net/sld StyledLayerDescriptor.xsd",
             xmlns: "http://www.opengis.net/sld",
-            "xmlns:sld": "http://www.opengis.net/sld",
             "xmlns:ogc": "http://www.opengis.net/ogc",
-            "xmlns:gml": "http://www.opengis.net/gml",
-            version: "1.0.0"
-          },
-          elements: js.elements
-        }
+            "xmlns:xlink": "http://www.w3.org/1999/xlink",
+            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+          }
+        },
+        config
       ]
     },
     {
-      spaces: 2
+      indent: "  ",
+      declaration: {
+        encoding: "UTF-8"
+      }
     }
   );
   return xml;

@@ -1,36 +1,33 @@
-import { js2xml } from 'xml-js';
+import XML from 'xml';
 import { Config } from '..';
 import fastGlob from 'fast-glob';
 import fse from 'fs-extra';
 import { pathToFileURL } from 'url';
 import { FILE_SUFFIX_REG } from './constants';
 
-export function transform(js: Config) {
-  const xml = js2xml(
+export function transform(config: Config) {
+  const xml = XML(
     {
-      declaration: {
-        attributes: {
-          version: '1.0',
-          encoding: 'utf-8'
-        }
-      },
-      elements: [
+      'sld:StyledLayerDescriptor': [
         {
-          type: 'element',
-          name: 'sld:StyledLayerDescriptor',
-          attributes: {
+          _attr: {
+            version: '1.0.0',
+            'xsi:schemaLocation':
+              'http://www.opengis.net/sld StyledLayerDescriptor.xsd',
             xmlns: 'http://www.opengis.net/sld',
-            'xmlns:sld': 'http://www.opengis.net/sld',
             'xmlns:ogc': 'http://www.opengis.net/ogc',
-            'xmlns:gml': 'http://www.opengis.net/gml',
-            version: '1.0.0'
-          },
-          elements: js.elements
-        }
+            'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+            'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+          }
+        },
+        config as unknown as any
       ]
     },
     {
-      spaces: 2
+      indent: '  ',
+      declaration: {
+        encoding: 'UTF-8'
+      }
     }
   );
   return xml;
@@ -60,3 +57,6 @@ export async function transformFile(file) {
     console.log(sldFileName, 'complied');
   });
 }
+
+// 将js对象转换为xml-js需要的格式
+// function configTransform() {}

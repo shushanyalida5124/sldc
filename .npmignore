@@ -1,0 +1,8 @@
+node_modules
+docs
+src
+.eslintignore
+.prettierignore
+.prettierrc.cjs
+tsconfig.json
+tsup.config.ts

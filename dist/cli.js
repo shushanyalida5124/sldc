@@ -6,7 +6,7 @@ import {
 import cac from "cac";
 
 // src/node/transform.ts
-import { js2xml } from "xml-js";
+import XML from "xml";
 import fastGlob from "fast-glob";
 import fse from "fs-extra";
 import { pathToFileURL } from "url";
@@ -18,32 +18,28 @@ var ROOTPATH = normalizePath(join(__dirname, ".."));
 var FILE_SUFFIX_REG = /(\.[jt]s$)/;
 
 // src/node/transform.ts
-function transform(js) {
-  const xml = js2xml(
+function transform(config) {
+  const xml = XML(
     {
-      declaration: {
-        attributes: {
-          version: "1.0",
-          encoding: "utf-8"
-        }
-      },
-      elements: [
+      "sld:StyledLayerDescriptor": [
         {
-          type: "element",
-          name: "sld:StyledLayerDescriptor",
-          attributes: {
+          _attr: {
+            version: "1.0.0",
+            "xsi:schemaLocation": "http://www.opengis.net/sld StyledLayerDescriptor.xsd",
             xmlns: "http://www.opengis.net/sld",
-            "xmlns:sld": "http://www.opengis.net/sld",
             "xmlns:ogc": "http://www.opengis.net/ogc",
-            "xmlns:gml": "http://www.opengis.net/gml",
-            version: "1.0.0"
-          },
-          elements: js.elements
-        }
+            "xmlns:xlink": "http://www.w3.org/1999/xlink",
+            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
+          }
+        },
+        config
       ]
     },
     {
-      spaces: 2
+      indent: "  ",
+      declaration: {
+        encoding: "UTF-8"
+      }
     }
   );
   return xml;
