@@ -18,6 +18,8 @@ var ROOTPATH = normalizePath(join(__dirname, ".."));
 var FILE_SUFFIX_REG = /(\.[jt]s$)/;
 
 // src/node/transform.ts
+import * as babel from "@babel/core";
+import presetTypescript from "@babel/preset-typescript";
 function transform(config) {
   const xml = XML(
     {
@@ -55,8 +57,11 @@ function transformFiles(root) {
   });
 }
 async function transformFile(file) {
+  const { code } = babel.transformFileSync(file, {
+    presets: [presetTypescript]
+  });
   const newFileName = file.replace(FILE_SUFFIX_REG, `${Math.random()}.js`);
-  await fse.copyFile(pathToFileURL(file), pathToFileURL(newFileName));
+  fse.writeFileSync(pathToFileURL(newFileName), code);
   const { default: config } = await import(pathToFileURL(newFileName));
   fse.rmSync(newFileName);
   const sld = transform(config);
@@ -91,7 +96,7 @@ async function createDevServer(root = process.cwd()) {
 }
 
 // src/node/cli.ts
-var cli = cac("sldc").version("0.0.1").help();
+var cli = cac("sldc").help();
 cli.command("[root]", "sldc start").option("-w, --watch", "watching changes").action(async (root, { watch }) => {
   root = root ? resolve(root) : process.cwd();
   if (FILE_SUFFIX_REG.test(root)) {

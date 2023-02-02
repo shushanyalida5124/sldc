@@ -1,6 +1,10 @@
 import { describe, test, expect } from 'vitest';
 import { transform } from '../transform';
 import { defineSLD } from '../../index';
+import * as babel from '@babel/core';
+import presetTypescript from '@babel/preset-typescript';
+import { pathToFileURL } from 'url';
+import { normalizePath } from 'vite';
 
 describe('transform', () => {
   test('transform js to xml', () => {
@@ -59,4 +63,17 @@ describe('transform', () => {
       </sld:StyledLayerDescriptor>"
     `);
   });
+  // test('babel', () => {
+  //   const ast = babel.transformFileSync(
+  //     normalizePath(pathToFileURL('../dev.ts').toString()),
+  //     {
+  //       presets: [presetTypescript]
+  //     }
+  //   );
+  //   const res = babel.transformFromAstSync(ast);
+  //   expect(res.code).toMatchInlineSnapshot(`
+  //     "type one = '1';
+  //     const a: one = '1';"
+  //   `);
+  // });
 });

@@ -8,7 +8,7 @@ export default defineConfig({
   bundle: true,
   splitting: true,
   outDir: 'dist',
-  format: ['cjs', 'esm'],
+  format: ['esm'],
   dts: true,
   shims: true
 });

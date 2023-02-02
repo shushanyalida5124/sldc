@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import { createDevServer } from './dev';
 import { FILE_SUFFIX_REG } from './constants';
 
-const cli = cac('sldc').version('0.0.1').help();
+const cli = cac('sldc').help();
 
 cli
   .command('[root]', 'sldc start')

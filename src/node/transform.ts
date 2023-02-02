@@ -4,6 +4,8 @@ import fastGlob from 'fast-glob';
 import fse from 'fs-extra';
 import { pathToFileURL } from 'url';
 import { FILE_SUFFIX_REG } from './constants';
+import * as babel from '@babel/core';
+import presetTypescript from '@babel/preset-typescript';
 
 export function transform(config: Config) {
   const xml = XML(
@@ -45,8 +47,11 @@ export function transformFiles(root: string) {
   });
 }
 export async function transformFile(file) {
+  const { code } = babel.transformFileSync(file, {
+    presets: [presetTypescript]
+  });
   const newFileName = file.replace(FILE_SUFFIX_REG, `${Math.random()}.js`);
-  await fse.copyFile(pathToFileURL(file), pathToFileURL(newFileName));
+  fse.writeFileSync(pathToFileURL(newFileName), code);
   const { default: config } = await import(
     pathToFileURL(newFileName) as unknown as string
   );
@@ -57,6 +62,3 @@ export async function transformFile(file) {
     console.log(sldFileName, 'complied');
   });
 }
-
-// 将js对象转换为xml-js需要的格式
-// function configTransform() {}
