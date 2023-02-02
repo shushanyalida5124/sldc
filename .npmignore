@@ -1,8 +1,10 @@
 node_modules
-docs
 src
+example
+.eslintrc.cjs
 .eslintignore
 .prettierignore
 .prettierrc.cjs
 tsconfig.json
 tsup.config.ts
+.npmrc

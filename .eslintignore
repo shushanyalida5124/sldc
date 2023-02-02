@@ -5,4 +5,3 @@ package.json
 pnpm-lock.yaml
 dist
 bin
-docs

@@ -1,6 +1,6 @@
 {
     "name": "sldc",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "",
     "main": "index.js",
     "type": "module",
@@ -42,5 +42,10 @@
         "fs-extra": "^11.1.0",
         "vite": "^4.0.4",
         "xml": "^1.0.1"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/shushanyalida5124/sldc"
+    },
+    "homepage": "https://github.com/shushanyalida5124/sldc#readme"
 }
