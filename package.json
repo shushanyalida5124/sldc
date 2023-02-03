@@ -8,6 +8,7 @@
         "start": "tsup --watch",
         "build": "tsup",
         "test": "vitest",
+        "coverage": "vitest run --coverage",
         "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx --quiet ."
     },
     "bin": {
@@ -26,6 +27,7 @@
         "@types/xml": "^1.0.8",
         "@typescript-eslint/eslint-plugin": "^5.48.2",
         "@typescript-eslint/parser": "^5.48.2",
+        "@vitest/coverage-c8": "^0.28.3",
         "eslint": "^8.32.0",
         "eslint-config-prettier": "^8.6.0",
         "eslint-plugin-prettier": "^4.2.1",
@@ -41,7 +43,7 @@
             "require": "./dist/index.cjs"
         },
         "./package.json": "./package.json"
-      },
+    },
     "dependencies": {
         "@babel/core": "^7.20.12",
         "@babel/preset-typescript": "^7.18.6",

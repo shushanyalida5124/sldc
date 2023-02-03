@@ -42,18 +42,23 @@ export function transformFiles(root: string) {
       ignore: ['**/node_modules/**', '**/build/**', 'config.ts']
     })
     .sort();
+  const tasks: Promise<void>[] = [];
   files.forEach(async (file) => {
-    transformFile(file);
+    tasks.push(transformFile(file));
+  });
+  return Promise.all(tasks).then(() => {
+    console.log('All files complied');
   });
 }
-export async function transformFile(file) {
+export async function transformFile(file: string) {
   const { code } = babel.transformFileSync(file, {
     presets: [presetTypescript]
   });
   const newFileName = file.replace(FILE_SUFFIX_REG, `${Math.random()}.js`);
+
   fse.writeFileSync(pathToFileURL(newFileName), code);
   const { default: config } = await import(
-    pathToFileURL(newFileName) as unknown as string
+    pathToFileURL(newFileName).toString()
   );
   fse.rmSync(newFileName);
   const sld = transform(config);

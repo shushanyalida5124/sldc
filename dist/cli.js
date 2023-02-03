@@ -52,8 +52,12 @@ function transformFiles(root) {
     absolute: true,
     ignore: ["**/node_modules/**", "**/build/**", "config.ts"]
   }).sort();
+  const tasks = [];
   files.forEach(async (file) => {
-    transformFile(file);
+    tasks.push(transformFile(file));
+  });
+  return Promise.all(tasks).then(() => {
+    console.log("All files complied");
   });
 }
 async function transformFile(file) {
@@ -62,7 +66,7 @@ async function transformFile(file) {
   });
   const newFileName = file.replace(FILE_SUFFIX_REG, `${Math.random()}.js`);
   fse.writeFileSync(pathToFileURL(newFileName), code);
-  const { default: config } = await import(pathToFileURL(newFileName));
+  const { default: config } = await import(pathToFileURL(newFileName).toString());
   fse.rmSync(newFileName);
   const sld = transform(config);
   const sldFileName = file.replace(FILE_SUFFIX_REG, ".sld");
