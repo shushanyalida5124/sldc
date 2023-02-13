@@ -18,7 +18,9 @@ type ScaleDenominatorKey = 'MaxScaleDenominator' | 'MinScaleDenominator';
 /**
  * 	Specifies the minimum or maximum  scale denominator (inclusive or exclusive) for the scale range in which this rule applies. If present, the rule applies at scales smaller or larger than the given scale..
  */
-type ScaleDenominator = Record<ScaleDenominatorKey, number>;
+type ScaleDenominator = {
+    [key in ScaleDenominatorKey]?: number;
+};
 /**
  * 	Specifies a filter controlling when the rule is applied.
  */
