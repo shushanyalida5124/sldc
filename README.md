@@ -6,12 +6,10 @@
 ```
 npm i sldc
 ```
-某些情况下似乎需要再全局安装一次
 ```
-npm i sldc -g
-```
-```
-sldc example.ts
+npx --no -- sldc example.ts
+// or
+npx --no -- sldc example/
 ```
 ```typescript
 // example.ts
